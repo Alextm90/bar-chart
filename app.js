@@ -1,4 +1,3 @@
-let data = [5, 25, 45, 79, 120, 300]
 
 let arr;
 const myFunc = async () => {
@@ -8,8 +7,8 @@ const myFunc = async () => {
        arr = data.data;
     });
 
-const width = 1000;
-const height = 1000;
+const width = 19000;
+const height = 1500;
 
 // get all GDPs into one dataset
 
@@ -25,22 +24,21 @@ let dateArray = []
     dateArray.push(element[0])
 });      
 
-console.log(dateArray, "test")
 const svg = d3.select("body")
         .append("svg")
         .attr("width", width)
         .attr("height", height)
         
-const scaleX = d3.scaleLinear()
-        .domain([d3.min(dateArray), d3.max(dateArray)])
-        .range([20, 600]);
+const scaleX = d3.scaleTime()
+       .domain([new Date(d3.min(dateArray)), new Date(d3.max(dateArray))])
+        .range([20, 900]);
 
 const xAxis = d3.axisBottom()
         .scale(scaleX)
 
 const scaleY = d3.scaleLinear()
        .domain([d3.min(gdpArray), d3.max(gdpArray)])
-       .range([height/2, 0]);
+       .range([height/2.5, 0]);
 
 const yAxis = d3.axisLeft()
          .scale(scaleY)
@@ -54,9 +52,34 @@ svg.append('g')
 svg.append('g')
         .attr("id", "x-axis")
         .attr("class", "tick")
-        .attr("transform", "translate(50, 520)")
-        .style("width", "650")
+        .attr("transform", "translate(50, 620)")
         .call(xAxis) 
+
+
+svg.selectAll("rect")
+       .data(gdpArray)
+       .enter()
+       .append("rect")
+       .attr("x", (d, i) => {
+            return i * 3.2
+          })
+       .attr("y", (d, i) => {
+            return height - d / 29.9
+       })
+       .attr("class", "bar")
+       .attr("width", 2.5)
+       .attr("data-date", (d, i) => {
+            return dateArray[i]
+       })
+       .attr("data-gdp", (d, i) => {
+        console.log(gdpArray[i])
+            return gdpArray[i]
+       })
+       .attr("height", (d) => {
+           return d / 29.9
+       })
+       .attr("transform", "translate(70, -879)");
+
 }
 
 myFunc()
