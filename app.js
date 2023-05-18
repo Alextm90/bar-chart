@@ -1,5 +1,5 @@
 let arr;
-const myFunc = async () => {
+const barChart = async () => {
     await fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json')
     .then(response => response.json())
     .then(data => {
@@ -7,10 +7,15 @@ const myFunc = async () => {
        arr = data.data;
     });
 
-const width = 1000;
+const width = 1100;
 const height = 700;
 
-// get all GDPs into one dataset
+const svg = d3.select("#container")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+
+// get all GDP data into one dataset
 
 let gdpArray = []
 arr.forEach((element) => {
@@ -24,40 +29,46 @@ let dateArray = []
   dateArray.push(element[0])
 });      
 
-const svg = d3.select("body")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-
-const scaleX = d3.scaleTime()
-       .domain([new Date(d3.min(dateArray)), new Date(d3.max(dateArray))])
-       .range([20, 900]);
+// create axes + scales
+const xScale = d3.scaleTime()
+        .domain([new Date(d3.min(dateArray)), new Date(d3.max(dateArray))])
+        .range([20, 900]);
 
 const xAxis = d3.axisBottom()
-        .scale(scaleX)
+        .scale(xScale)
 
-const scaleY = d3.scaleLinear()
-       .domain([0, d3.max(gdpArray)])
-       .range([height/1.1665, 0]);
+const yScale = d3.scaleLinear()
+        .domain([0, d3.max(gdpArray)])
+        .range([height/1.4, 0]);
 
 const yAxis = d3.axisLeft()
-         .scale(scaleY)
+         .scale(yScale)
     
 svg.append('g')
         .attr("id", "y-axis")
         .attr("class", "tick")
-        .attr('transform', 'translate(70, 20)')
-         .call(yAxis.tickFormat((gdpArray) => {
-             return "$" + gdpArray;
-         }))
+        .attr('transform', 'translate(70, 40)')
+        .call(yAxis)
+  	.append("text")
+        .text('Gross Domestic Product (Billions of USD)')
+        .attr("stroke", "black")
+	.attr("transform", "rotate(-90)")
+        .attr("x", -150)
+	.attr("y", 20)
+        .attr("id", "label")
+        .attr("font-size", "12px")
+        .attr("font-family", "Georgia")
 
 svg.append('g')
         .attr("id", "x-axis")
         .attr("class", "tick")
-        .attr("transform", "translate(50, 620)")
+        .attr("transform", "translate(50, 540)")
         .call(xAxis) 
 
-const tooltip = d3.select('#tooltip')
+// create tooltip + datapoints
+let tooltip = d3.select('body')
+        .append("div")
+        .attr("id", "tooltip")
 
 svg.selectAll("rect")
        .data(gdpArray)
@@ -67,10 +78,10 @@ svg.selectAll("rect")
             return i * 3.2
           })
        .attr("y", (d, i) => {
-            return height - d / 30.2
+            return height - d / 36
        })
        .attr("class", "bar")
-       .attr("width", 2.5)
+       .attr("width", 3.2)
        .attr("data-date", (d, i) => {
             return dateArray[i]
        })
@@ -78,22 +89,26 @@ svg.selectAll("rect")
             return gdpArray[i]
        })
        .attr("height", (d) => {
-           return d / 30.2
+           return d / 36
        })
-       .attr("transform", "translate(70, -79)")
-       .on('mouseenter', (arr, d) => {
-        const [x, y] = d3.pointer(arr)
+       .attr("transform", "translate(70, -160)")
+       .on('mouseover', (event, d) => {
            let dateArrayIndex = gdpArray.indexOf(d)
-           d3.select('#tooltip')
-          .text(`$${d} Billion ${dateArray[dateArrayIndex]}`)
-          .attr("data-date", dateArray[dateArrayIndex])
-          .attr('y', 30 + 'px')
-    
+            tooltip
+           .html(`${dateArray[dateArrayIndex]} <br> $${d} Billion `)
+           .style("opacity", .9)
+           .style("position", "absolute")
+           .style("left", (event.pageX + 25) + "px")
+           .style("top", (event.pageY - 55) + "px")
+           .style("background-color", "#c2bdbdfd")
+           .attr("data-date", dateArray[dateArrayIndex])
        })
-       
-}
-
-myFunc()
+       .on('mouseout', () => {
+            tooltip
+            .style("opacity", 0)
+          })
+       }
+barChart()
 
 
 
