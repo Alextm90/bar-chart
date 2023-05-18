@@ -53,7 +53,7 @@ svg.append('g')
         .text('Gross Domestic Product (Billions of USD)')
         .attr("stroke", "black")
 	.attr("transform", "rotate(-90)")
-        .attr("x", -150)
+        .attr("x", -100)
 	.attr("y", 20)
         .attr("id", "label")
         .attr("font-size", "12px")
@@ -81,7 +81,7 @@ svg.selectAll("rect")
             return height - d / 36
        })
        .attr("class", "bar")
-       .attr("width", 3.2)
+       .attr("width", 3.1)
        .attr("data-date", (d, i) => {
             return dateArray[i]
        })
