@@ -5,6 +5,7 @@ body {
     justify-content: center;
     align-items: center;
     margin: auto;
+    background-color: #e5f0cb;
 }
 
 p {
@@ -23,9 +24,10 @@ p {
 }
 
 .bar {
-    fill: #0051ff;
+    fill: #bedc66;
 }
 
 .bar:hover {
-    fill: #00eeff;
+    fill: #e5f0cb;
 }
+
