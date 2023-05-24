@@ -1,4 +1,3 @@
-let arr;
 const barChart = async () => {
     await fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json')
     .then(response => response.json())
