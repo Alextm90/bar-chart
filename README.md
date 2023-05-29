@@ -1,1 +1,1 @@
-https://alextm-d3bar-chart.surge.sh/
+https://alextm-d3-scatter-plot-graph.surge.sh
